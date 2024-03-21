@@ -1,12 +1,3 @@
-# Создайте шаблон, который выводит список заказанных клиентом товаров из всех его заказов с 
-# сортировкой по времени:
-# — за последние 7 дней (неделю)
-# — за последние 30 дней (месяц)
-# — за последние 365 дней (год)
-
-# Товары в списке не должны повторятся.
-
-
 from django.db import models
 from django.utils import timezone
 
@@ -19,7 +10,7 @@ class User(models.Model):
     date_registered = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f'Username: {self.name}, email: {self.email}, phone: {self.phone}'
+        return f'{self.name}, email: {self.email}, phone: {self.phone}'
 
 
 class Product(models.Model):
@@ -28,7 +19,8 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=8, decimal_places=2)
     amount = models.IntegerField(default=0)
     date_added = models.DateTimeField(auto_now_add=True)
-    
+    photo = models.ImageField(upload_to='product_photos/', default='default_product.jpg')
+
     def __str__(self):
         return f'Product #{self.pk}: {self.name}, price: {self.price}, amount: {self.amount}'
 
@@ -42,5 +34,6 @@ class Order(models.Model):
     def __str__(self):
         products = ', '.join([product.name for product in self.products.all()])
         return f'Order #{self.pk}: customer: {self.customer.name}, total_price: {self.total_price}, products: {products}'
+
 
 

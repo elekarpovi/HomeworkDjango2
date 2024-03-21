@@ -1,5 +1,7 @@
 from django.utils import timezone
 from django.shortcuts import render, get_object_or_404
+
+from .forms import ProductForm
 from .models import User, Product, Order
 import datetime
 
@@ -17,10 +19,23 @@ def user_products(request, user_id, days):
 
 
 def product(request):
-    product = Product()
-        
-    
+    if request.method == 'POST':
+        form = ProductForm(request.POST, request.FILES)
+        if form.is_valid():
+            product = Product(
+                name=form.cleaned_data['name'],
+                description=form.cleaned_data['description'],
+                price=form.cleaned_data['price'],
+                amount=form.cleaned_data['amount'],
+                photo=form.cleaned_data['photo']
+            )
+            product.save()
+    else:
+        form = ProductForm()
+    products = Product.objects.all()
     context = {
         "title": "Продукты",
+        "products": products,
+        'form': form,
     }
     return render(request, 'myapp/product.html', context)
