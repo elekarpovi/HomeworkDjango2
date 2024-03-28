@@ -39,3 +39,7 @@ def product(request):
         'form': form,
     }
     return render(request, 'myapp/product.html', context)
+
+
+def index(request):
+    return render(request, "myapp/index.html")
